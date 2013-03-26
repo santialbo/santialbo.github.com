@@ -1,12 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>http://santialbo.github.com/blog/2013/03/24/introduction-to-parser-combinators/</loc>
+        <lastmod>2013-03-26T15:03:47-04:00</lastmod>
+    </url>
+    <url>
         <loc>http://santialbo.github.com/blog/archives/</loc>
-        <lastmod>2013-03-26T14:33:35-04:00</lastmod>
+        <lastmod>2013-03-26T15:03:47-04:00</lastmod>
     </url>
     <url>
         <loc>http://santialbo.github.com/</loc>
-        <lastmod>2013-03-26T14:33:35-04:00</lastmod>
+        <lastmod>2013-03-26T15:03:47-04:00</lastmod>
     </url>
     <url>
         <loc>http://santialbo.github.com/robots.txt</loc>
