@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Santi Albo]]></title>
+  <link href="http://santialbo.github.com/atom.xml" rel="self"/>
+  <link href="http://santialbo.github.com/"/>
+  <updated>2013-03-26T14:39:02-04:00</updated>
+  <id>http://santialbo.github.com/</id>
+  <author>
+    <name><![CDATA[Santi Albo]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+</feed>
