@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Functional programming | Santi Albo]]></title>
   <link href="http://santialbo.com/blog/categories/functional-programming/atom.xml" rel="self"/>
   <link href="http://santialbo.com/"/>
-  <updated>2013-03-26T15:29:46-04:00</updated>
+  <updated>2013-03-27T01:35:51-04:00</updated>
   <id>http://santialbo.com/</id>
   <author>
     <name><![CDATA[Santi Albo]]></name>
@@ -39,6 +39,9 @@ type ParserResult&lt;'a> =</p>
 ```</p>
 
 <p>This means that a <code>Parser&lt;'a&gt;</code> will receive a <code>list&lt;char&gt;</code> and will return a <code>ParserResult&lt;'a&gt;</code> which can be either a <code>Failure</code> if nothing could be parsed or a <code>Success</code> and return both the parsed element and the rest of the list.</p>
+
+<!--more-->
+
 
 <p>Having this definition, we can now build our first parser:</p>
 
