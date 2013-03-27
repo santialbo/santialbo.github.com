@@ -4,7 +4,7 @@
   <title><![CDATA[Santi Albo]]></title>
   <link href="http://santialbo.com/atom.xml" rel="self"/>
   <link href="http://santialbo.com/"/>
-  <updated>2013-03-27T16:19:13-04:00</updated>
+  <updated>2013-03-27T16:30:03-04:00</updated>
   <id>http://santialbo.com/</id>
   <author>
     <name><![CDATA[Santi Albo]]></name>
@@ -162,7 +162,7 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>See how the <em>Bind</em> operator <code>&gt;&gt;=</code> is used twice in the definition of the <code>.&gt;&gt;.</code> operator? Unfortunately this is a little bit hard to read, specially when dealing with more complex parsers. That is why Haskell introduced the <em>do-notation</em> (<em>perform-notation</em> in OCaml or <em>computation expressions</em> in F#), which is a syntactic sugar that tries to mimick the imperative laguages style. Basically, it allows you to write a series of simple <em>statements</em> instead of a nested series of <code>&gt;&gt;=</code> operations.</p>
+<p>Notice however how the <em>Bind</em> operator <code>&gt;&gt;=</code> is used twice in the definition of the <code>.&gt;&gt;.</code> operator. Unfortunately this is a little bit hard to read, specially when dealing with more complex parsers. That is why Haskell introduced the <em>do-notation</em> (<em>perform-notation</em> in OCaml or <em>computation expressions</em> in F#), which is a syntactic sugar that tries to mimick the imperative laguages style. Basically, it allows you to write a series of simple <em>statements</em> instead of a nested series of <code>&gt;&gt;=</code> operations.</p>
 
 <h3>Workflows</h3>
 
