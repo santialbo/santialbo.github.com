@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Functional programming | Santi Albo]]></title>
   <link href="http://santialbo.com/blog/categories/functional-programming/atom.xml" rel="self"/>
   <link href="http://santialbo.com/"/>
-  <updated>2013-03-27T01:35:51-04:00</updated>
+  <updated>2013-03-27T16:19:13-04:00</updated>
   <id>http://santialbo.com/</id>
   <author>
     <name><![CDATA[Santi Albo]]></name>
@@ -12,6 +12,241 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Monads in F#]]></title>
+    <link href="http://santialbo.com/blog/2013/03/27/monads-in-f-sharp/"/>
+    <updated>2013-03-27T16:04:00-04:00</updated>
+    <id>http://santialbo.com/blog/2013/03/27/monads-in-f-sharp</id>
+    <content type="html"><![CDATA[<p>When I first tried to learn what monads were, I probably made the mistake of going to wikipedia, which only made things worse. It was not until I began to play with <a href="/blog/2013/03/24/introduction-to-parser-combinators/">parser combinators</a> that I started to grasp the concept.</p>
+
+<h3>What are monads?</h3>
+
+<p>You probably heard the word <em>monad</em> if you have dealt with functional programming.
+However, to me the word is rather obscure, and might sound a little daunting to people starting in functional programming. This is one of the reasons why the creators of F# decided to avoid this term and use the word <em>workflow</em> or <em>computation expression</em> instead.</p>
+
+<p><em>Ok... but what are they?</em></p>
+
+<p>Basically monads are just a typeclass and two fundamental operations associated. Think of a generic interface with two abstract methods. These operations have the following syntax:</p>
+
+<p><code>fsharp
+Return: 'a -&gt; M&lt;'a&gt;
+Bind: M&lt;'a&gt; -&gt; ('a -&gt; M&lt;'b&gt;) -&gt; M&lt;'b&gt;
+</code></p>
+
+<!--more-->
+
+
+<p>If you have a type <code>M&lt;'a&gt;</code> and two methods with those signatures you've got a monad. <em>(Actually there are <a href="http://en.wikipedia.org/wiki/Monad_%28functional_programming%29#Monad_laws">a couple rules</a> these two methods must obey, but we will skip them since they might complicate things.)</em></p>
+
+<p>The classical example is the <em>Maybe</em>/<em>Option</em> monad. In F#, it can be defined as follows:</p>
+
+<p>```fsharp
+// Note that type annotations are optional. I made them explicity for clarity.
+type Maybe&lt;'a> =</p>
+
+<pre><code>| Just of 'a
+| Nothing
+</code></pre>
+
+<p>let Return (x: 'a) : Maybe&lt;'a> =</p>
+
+<pre><code>Just(x)
+</code></pre>
+
+<p>let Bind (mx: Maybe&lt;'a>) (f: 'a -> Maybe&lt;'b>) : Maybe&lt;'b> =</p>
+
+<pre><code>match mx with
+| Just(x) -&gt; f x
+| Nothing -&gt; Nothing
+</code></pre>
+
+<p>```</p>
+
+<p>which may suffice within the pages of a textbookf, but for myself, still didn't make things any clearer. What I am going to do however, is explain how the usage of monads makes a lot of sense when dealing parser combinators. <em>(If you want to keep reading about the Maybe monad example you can go to <a href="http://en.wikipedia.org/wiki/Monad_%28functional_programming%29#Motivating_examples">the wikipedia entry about monads</a>)</em>.</p>
+
+<h3>Monads and parser combinators</h3>
+
+<p>If you don't know what parser combinators are, you can read <a href="/blog/2013/03/24/introduction-to-parser-combinators/">my previous blog post</a> to get a quick grasp.</p>
+
+<p>So we have the following type definition:</p>
+
+<p>```fsharp
+type ParserResult&lt;'a> =</p>
+
+<pre><code>| Success of 'a * list&lt;char&gt;
+| Failure
+</code></pre>
+
+<p>type Parser&lt;'a> = list<char> -> ParserResult&lt;'a>
+```</p>
+
+<p>Now that we have the typeclass <code>Parser</code>, we only need to define the associated <code>Return</code> and <code>Bind</code> operations:</p>
+
+<p>```fsharp
+let Return (x: 'a): Parser&lt;'a> =</p>
+
+<pre><code>let p stream = Success(x, stream)
+in p
+</code></pre>
+
+<p>let Bind (p: Parser&lt;'a>) (f: 'a -> Parser&lt;'b>) : Parser&lt;'b> =</p>
+
+<pre><code>let q stream =
+    match p stream with
+    | Success(x, rest) -&gt; (f x) rest
+    | Failure -&gt; Failure
+in q
+</code></pre>
+
+<p>```</p>
+
+<p>TA-DAA! There's a monad. It is pretty standard notation though to use the operator <code>&gt;&gt;=</code> for the <code>Bind</code> operation. We can define it too:</p>
+
+<p><code>fsharp
+let (&gt;&gt;=) = Bind
+</code></p>
+
+<p><em>Cool, but how is this useful?</em></p>
+
+<p>This functions we just defined allows us to define the following parser combinators in a very concise way:</p>
+
+<p>```fsharp
+/// If parser p succeeds returns x as a result.
+let (>>%) p x : Parser&lt;'b> =</p>
+
+<pre><code>p &gt;&gt;= (fun _ -&gt; Return x)
+</code></pre>
+
+<p>/// Applies parsers p1 and p2 returning the result of p2.
+let (>>.) p1 p2 : Parser&lt;'b> =</p>
+
+<pre><code>p1 &gt;&gt;= (fun _ -&gt; p2)
+</code></pre>
+
+<p>/// Applies parsers p1 and p2 returning the result of p1.
+let (.>>) p1 p2 : Parser&lt;'a> =</p>
+
+<pre><code>p1 &gt;&gt;= (fun x -&gt; p2 &gt;&gt;% x)
+</code></pre>
+
+<p>/// Applies parsers p1 and p2 returning both results.
+let (.>>.) p1 p2: Parser&lt;'a*'b> =</p>
+
+<pre><code>p1 &gt;&gt;= (fun x -&gt; p2 &gt;&gt;= (fun y -&gt; Return (x, y)))
+</code></pre>
+
+<p>```</p>
+
+<p>See how the <em>Bind</em> operator <code>&gt;&gt;=</code> is used twice in the definition of the <code>.&gt;&gt;.</code> operator? Unfortunately this is a little bit hard to read, specially when dealing with more complex parsers. That is why Haskell introduced the <em>do-notation</em> (<em>perform-notation</em> in OCaml or <em>computation expressions</em> in F#), which is a syntactic sugar that tries to mimick the imperative laguages style. Basically, it allows you to write a series of simple <em>statements</em> instead of a nested series of <code>&gt;&gt;=</code> operations.</p>
+
+<h3>Workflows</h3>
+
+<p>In order to use the F#'s equivalent to the <em>do-notation</em>, we need to create a <em>workflow builder</em>. Workflow builders are just an interface that we have to implement. Two methods are required, the rest are optional. These two methods are, as one could expect, <code>Return</code> and <code>Bind</code>. This is how we can define the <code>parse</code> workflow:</p>
+
+<p>```fsharp
+// Note that we previously defined Bind and Return.
+type ParserBuilder() =</p>
+
+<pre><code>member x.Bind(p, f) = Bind p f
+member x.Return(y) = Return y
+</code></pre>
+
+<p>let parse = new ParserBuilder()
+```</p>
+
+<p>and this is how we use it to define the <code>Many</code> parser combinator in a more readable way.</p>
+
+<p>```fsharp
+// This is the Either combinator defined in the previous blog post.
+let (&lt;|>) = Either</p>
+
+<p>let rec Many p : Parser&lt;list&lt;'a>> =</p>
+
+<pre><code>parse {
+    let! x = p          // Applies p
+    let! xs = (Many p)  // Applies (Many p) recursively
+    return x :: xs      // returns the cons of the two results
+} &lt;|&gt; Return []
+</code></pre>
+
+<p>```</p>
+
+<p>or the following <code>Many1</code> combinator, which is similar to the <code>Many</code> combinator but requires at least one success:</p>
+
+<p>```fsharp
+let Many1 p : Parser&lt;list&lt;'a>> =</p>
+
+<pre><code>parse {
+    let! x = p          // Applies p
+    let! xs = (Many p)  // Applies (Many p) recursively
+    return x :: xs      // returns the cons of the two results
+}
+</code></pre>
+
+<p>```</p>
+
+<p>or even more complex parsers such a this float number parser:</p>
+
+<p>```fsharp
+/// Parses float numbers which match /[+-]?(\d+(.\d<em>)?|\d</em>.\d+)([eE][+-]?\d+)?/
+let FloatParser: Parser<float> =</p>
+
+<pre><code>parse {
+    let! s = (CharParser '+' &lt;|&gt; CharParser '-') &lt;|&gt; Return '+'     // [+-]?
+    let! l = (parse {                                               // (
+        let! l = Many1 DigitParser                                  //  \d+
+        let! pd = (parse {                                          //  (
+            let! p = CharParser '.'                                 //   \.
+            let! d = Many DigitParser                               //   \d*
+            return p::d
+            } &lt;|&gt; Return [])                                        //  )?
+        return l @ pd
+        } &lt;|&gt;                                                       //  |
+        parse {
+            let! l = Many DigitParser                               // \d*
+            let! p = CharParser '.'                                 // \.
+            let! d = Many1 DigitParser                              // \d+
+            return l @ p::d
+        }
+    )
+    let! e = (parse {
+        let! e = CharParser 'e' &lt;|&gt; CharParser 'E'                  // ([eE]
+        let! s = (CharParser '+' &lt;|&gt; CharParser '-') &lt;|&gt; Return '+' //   [+-]?
+        let! x = Many1 (DigitParser)                                //   \d+
+        return e::s::x                                              // )?
+    } &lt;|&gt; Return [])
+    return float (new System.String(s::(l @ e) |&gt; List.toArray))
+}
+</code></pre>
+
+<p>```</p>
+
+<p>which allows us to do the following parsing:</p>
+
+<p>```fsharp</p>
+
+<blockquote><p>printfn "%A" (FloatParser ("-1.23e45" |> Seq.toList));;
+Success (-1.23e+45,[])
+```</p></blockquote>
+
+<h3>Conclusion</h3>
+
+<p>I think we can summarize the post in the follow points:</p>
+
+<ul>
+<li>The word <em>monad</em> is cool but gives no clue of what they actually are. Other languages have chosen more descriptive names such as <em>workflows</em>.</li>
+<li>A monad is just an <a href="http://en.wikipedia.org/wiki/Interface_%28Java%29"><em>interface</em></a> with certain rules in the implementation of its methods.</li>
+<li>Parser combinators are a good example of the usage of monads.</li>
+<li>Monads without the <em>do-notation</em> would be a pain in the ass.</li>
+</ul>
+
+
+<p>All the code snippets are available <a href="http://tryfs.net/snippets/snippet-hB">here</a> for easy access and testing.</p>
+
+<p><em>Wow, that was long.</em></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Introduction to parser combinators]]></title>
