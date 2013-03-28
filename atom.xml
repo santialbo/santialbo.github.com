@@ -4,7 +4,7 @@
   <title><![CDATA[Santi Albo]]></title>
   <link href="http://santialbo.com/atom.xml" rel="self"/>
   <link href="http://santialbo.com/"/>
-  <updated>2013-03-27T16:30:03-04:00</updated>
+  <updated>2013-03-28T00:41:01-04:00</updated>
   <id>http://santialbo.com/</id>
   <author>
     <name><![CDATA[Santi Albo]]></name>
@@ -27,7 +27,7 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 
 <p><em>Ok&#8230; but what are they?</em></p>
 
-<p>Basically monads are just a typeclass and two fundamental operations associated. Think of a generic interface with two abstract methods. These operations have the following syntax:</p>
+<p>Basically, monads are just a typeclass and two fundamental operations associated. Think of a generic interface with two abstract methods. These operations have the following syntax:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -41,7 +41,7 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 <!--more-->
 
 
-<p>If you have a type <code>M&lt;'a&gt;</code> and two methods with those signatures you&#8217;ve got a monad. <em>(Actually there are <a href="http://en.wikipedia.org/wiki/Monad_%28functional_programming%29#Monad_laws">a couple rules</a> these two methods must obey, but we will skip them since they might complicate things.)</em></p>
+<p>If you have a type <code>M&lt;'a&gt;</code> and two methods with those signatures, then you&#8217;ve got a monad. (Actually there are <a href="http://en.wikipedia.org/wiki/Monad_%28functional_programming%29#Monad_laws">a couple rules</a> these two methods must obey, but we will skip them since they might complicate things.)</p>
 
 <p>The classical example is the <em>Maybe</em>/<em>Option</em> monad. In F#, it can be defined as follows:</p>
 
@@ -72,11 +72,11 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>which may suffice within the pages of a textbookf, but for myself, still didn&#8217;t make things any clearer. What I am going to do however, is explain how the usage of monads makes a lot of sense when dealing parser combinators. <em>(If you want to keep reading about the Maybe monad example you can go to <a href="http://en.wikipedia.org/wiki/Monad_%28functional_programming%29#Motivating_examples">the wikipedia entry about monads</a>)</em>.</p>
+<p>which may suffice within the pages of a textbook, but it didn&#8217;t make things any clearer to me. Instead, I am going to explain how the usage of monads makes a lot of sense when dealing parser combinators. (If you want to keep reading about the Maybe monad example you can go to <a href="http://en.wikipedia.org/wiki/Monad_%28functional_programming%29#Motivating_examples">the wikipedia entry about monads</a>).</p>
 
 <h3>Monads and parser combinators</h3>
 
-<p>If you don&#8217;t know what parser combinators are, you can read <a href="http://santialbo.com/blog/2013/03/24/introduction-to-parser-combinators/">my previous blog post</a> to get a quick grasp.</p>
+<p>If you don&#8217;t know what parser combinators are, you can read <a href="http://santialbo.com/blog/2013/03/24/introduction-to-parser-combinators/">my previous blog post</a> to get a quick overview.</p>
 
 <p>So we have the following type definition:</p>
 
@@ -92,6 +92,8 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 </span><span class='line'><span class="k">type</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;</span> <span class="o">=</span> <span class="kt">list</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="o">-&gt;</span> <span class="nc">ParserResult</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p>That means that a <code>Parser</code> is just a function that takes a list of characters and returns a <code>ParserResult&lt;'a&gt;</code>, which can be either a <code>Failure</code> if nothing could be parsed or a <code>Success</code> otherwise, returning both the parsed element and the rest of the list.</p>
 
 <p>Now that we have the typeclass <code>Parser</code>, we only need to define the associated <code>Return</code> and <code>Bind</code> operations:</p>
 
@@ -118,7 +120,7 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>TA-DAA! There&#8217;s a monad. It is pretty standard notation though to use the operator <code>&gt;&gt;=</code> for the <code>Bind</code> operation. We can define it too:</p>
+<p>TA-DAA! There&#8217;s a monad. It is standard notation, though, to use the operator <code>&gt;&gt;=</code> for the <code>Bind</code> operation. We can define it too:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="k">let</span> <span class="o">(&gt;&gt;=)</span> <span class="o">=</span> <span class="nc">Bind</span>
@@ -127,7 +129,7 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 
 <p><em>Cool, but how is this useful?</em></p>
 
-<p>This functions we just defined allows us to define the following parser combinators in a very concise way:</p>
+<p>Those functions we just defined allow us to define the following parser combinators in a very concise way:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -144,29 +146,29 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="c1">/// If parser p succeeds returns x as a result.</span>
+</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="c1">/// If parser p succeeds, returns x as a result.</span>
 </span><span class='line'><span class="k">let</span> <span class="o">(&gt;&gt;%)</span> <span class="n">p</span> <span class="n">x</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">b</span><span class="o">&gt;</span> <span class="o">=</span>
 </span><span class='line'>    <span class="n">p</span> <span class="o">&gt;&gt;=</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="nc">Return</span> <span class="n">x</span><span class="o">)</span>
 </span><span class='line'>
-</span><span class='line'><span class="c1">/// Applies parsers p1 and p2 returning the result of p2.</span>
+</span><span class='line'><span class="c1">/// Applies parsers p1 and p2, returning the result of p2.</span>
 </span><span class='line'><span class="k">let</span> <span class="o">(&gt;&gt;.)</span> <span class="n">p1</span> <span class="n">p2</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">b</span><span class="o">&gt;</span> <span class="o">=</span>
 </span><span class='line'>    <span class="n">p1</span> <span class="o">&gt;&gt;=</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">p2</span><span class="o">)</span>
 </span><span class='line'>
-</span><span class='line'><span class="c1">/// Applies parsers p1 and p2 returning the result of p1.</span>
+</span><span class='line'><span class="c1">/// Applies parsers p1 and p2, returning the result of p1.</span>
 </span><span class='line'><span class="k">let</span> <span class="o">(.&gt;&gt;)</span> <span class="n">p1</span> <span class="n">p2</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;</span> <span class="o">=</span>
 </span><span class='line'>    <span class="n">p1</span> <span class="o">&gt;&gt;=</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">p2</span> <span class="o">&gt;&gt;%</span> <span class="n">x</span><span class="o">)</span>
 </span><span class='line'>
-</span><span class='line'><span class="c1">/// Applies parsers p1 and p2 returning both results.</span>
+</span><span class='line'><span class="c1">/// Applies parsers p1 and p2, returning both results.</span>
 </span><span class='line'><span class="k">let</span> <span class="o">(.&gt;&gt;.)</span> <span class="n">p1</span> <span class="n">p2</span><span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">*</span><span class="k">&#39;</span><span class="n">b</span><span class="o">&gt;</span> <span class="o">=</span>
 </span><span class='line'>    <span class="n">p1</span> <span class="o">&gt;&gt;=</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">p2</span> <span class="o">&gt;&gt;=</span> <span class="o">(</span><span class="k">fun</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="nc">Return</span> <span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">)))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Notice however how the <em>Bind</em> operator <code>&gt;&gt;=</code> is used twice in the definition of the <code>.&gt;&gt;.</code> operator. Unfortunately this is a little bit hard to read, specially when dealing with more complex parsers. That is why Haskell introduced the <em>do-notation</em> (<em>perform-notation</em> in OCaml or <em>computation expressions</em> in F#), which is a syntactic sugar that tries to mimick the imperative laguages style. Basically, it allows you to write a series of simple <em>statements</em> instead of a nested series of <code>&gt;&gt;=</code> operations.</p>
+<p>Notice that the <em>Bind</em> operator <code>&gt;&gt;=</code> is used twice in the definition of the <code>.&gt;&gt;.</code> operator. Unfortunately, this gets harder to read as the complexity of parsers increases. This is why Haskell introduced the <em>do-notation</em> (<em>perform-notation</em> in OCaml or <em>computation expressions</em> in F#), which is a syntactic sugar that tries to mimick the imperative-style laguages. Basically, it allows you to write a series of simple <em>statements</em> instead of a nested series of <code>&gt;&gt;=</code> operations.</p>
 
 <h3>Workflows</h3>
 
-<p>In order to use the F#&#8217;s equivalent to the <em>do-notation</em>, we need to create a <em>workflow builder</em>. Workflow builders are just an interface that we have to implement. Two methods are required, the rest are optional. These two methods are, as one could expect, <code>Return</code> and <code>Bind</code>. This is how we can define the <code>parse</code> workflow:</p>
+<p>In order to use the F#&#8217;s equivalent to the <em>do-notation</em>, we need to create a <em>workflow builder</em>. Workflow builders are just an interface that we have to implement. Two methods are required; the rest are optional. These two methods are <code>Return</code> and <code>Bind</code> as you might have guessed. This is how we can define the <code>parse</code> workflow:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -183,7 +185,7 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>and this is how we use it to define the <code>Many</code> parser combinator in a more readable way.</p>
+<p>and this is how we use it to define the <code>Many</code> parser combinator in a more readable way than thre previous blog post.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -206,7 +208,7 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>or the following <code>Many1</code> combinator, which is similar to the <code>Many</code> combinator but requires at least one success:</p>
+<p>or the following <code>Many1</code> combinator, which is similar to the <code>Many</code> combinator but requires at least one success (Think of <code>*</code> vs <code>+</code> in regular expressions):</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -223,7 +225,7 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>or even more complex parsers such a this float number parser:</p>
+<p>or even more complex parsers such a this floating point number parser:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -258,23 +260,23 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 </span><span class='line'>    <span class="n">parse</span> <span class="o">{</span>
 </span><span class='line'>        <span class="k">let</span><span class="o">!</span> <span class="n">s</span> <span class="o">=</span> <span class="o">(</span><span class="nc">CharParser</span> <span class="sc">&#39;+&#39;</span> <span class="o">&lt;|&gt;</span> <span class="nc">CharParser</span> <span class="sc">&#39;-&#39;</span><span class="o">)</span> <span class="o">&lt;|&gt;</span> <span class="nc">Return</span> <span class="sc">&#39;+&#39;</span>     <span class="c1">// [+-]?</span>
 </span><span class='line'>        <span class="k">let</span><span class="o">!</span> <span class="n">l</span> <span class="o">=</span> <span class="o">(</span><span class="n">parse</span> <span class="o">{</span>                                               <span class="c1">// (</span>
-</span><span class='line'>            <span class="k">let</span><span class="o">!</span> <span class="n">l</span> <span class="o">=</span> <span class="nc">Many1</span> <span class="nc">DigitParser</span>                                  <span class="c1">//  \d+</span>
-</span><span class='line'>            <span class="k">let</span><span class="o">!</span> <span class="n">pd</span> <span class="o">=</span> <span class="o">(</span><span class="n">parse</span> <span class="o">{</span>                                          <span class="c1">//  (</span>
-</span><span class='line'>                <span class="k">let</span><span class="o">!</span> <span class="n">p</span> <span class="o">=</span> <span class="nc">CharParser</span> <span class="sc">&#39;.&#39;</span>                                 <span class="c1">//   \.</span>
-</span><span class='line'>                <span class="k">let</span><span class="o">!</span> <span class="n">d</span> <span class="o">=</span> <span class="nc">Many</span> <span class="nc">DigitParser</span>                               <span class="c1">//   \d*</span>
+</span><span class='line'>            <span class="k">let</span><span class="o">!</span> <span class="n">l</span> <span class="o">=</span> <span class="nc">Many1</span> <span class="nc">DigitParser</span>                                  <span class="c1">//   \d+</span>
+</span><span class='line'>            <span class="k">let</span><span class="o">!</span> <span class="n">pd</span> <span class="o">=</span> <span class="o">(</span><span class="n">parse</span> <span class="o">{</span>                                          <span class="c1">//   (</span>
+</span><span class='line'>                <span class="k">let</span><span class="o">!</span> <span class="n">p</span> <span class="o">=</span> <span class="nc">CharParser</span> <span class="sc">&#39;.&#39;</span>                                 <span class="c1">//     \.</span>
+</span><span class='line'>                <span class="k">let</span><span class="o">!</span> <span class="n">d</span> <span class="o">=</span> <span class="nc">Many</span> <span class="nc">DigitParser</span>                               <span class="c1">//     \d*</span>
 </span><span class='line'>                <span class="k">return</span> <span class="n">p</span><span class="o">::</span><span class="n">d</span>
-</span><span class='line'>                <span class="o">}</span> <span class="o">&lt;|&gt;</span> <span class="nc">Return</span> <span class="bp">[]</span><span class="o">)</span>                                        <span class="c1">//  )?</span>
+</span><span class='line'>                <span class="o">}</span> <span class="o">&lt;|&gt;</span> <span class="nc">Return</span> <span class="bp">[]</span><span class="o">)</span>                                        <span class="c1">//   )?</span>
 </span><span class='line'>            <span class="k">return</span> <span class="n">l</span> <span class="o">@</span> <span class="n">pd</span>
-</span><span class='line'>            <span class="o">}</span> <span class="o">&lt;|&gt;</span>                                                       <span class="c1">//  |</span>
+</span><span class='line'>            <span class="o">}</span> <span class="o">&lt;|&gt;</span>                                                       <span class="c1">//   |</span>
 </span><span class='line'>            <span class="n">parse</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">let</span><span class="o">!</span> <span class="n">l</span> <span class="o">=</span> <span class="nc">Many</span> <span class="nc">DigitParser</span>                               <span class="c1">// \d*</span>
-</span><span class='line'>                <span class="k">let</span><span class="o">!</span> <span class="n">p</span> <span class="o">=</span> <span class="nc">CharParser</span> <span class="sc">&#39;.&#39;</span>                                 <span class="c1">// \.</span>
-</span><span class='line'>                <span class="k">let</span><span class="o">!</span> <span class="n">d</span> <span class="o">=</span> <span class="nc">Many1</span> <span class="nc">DigitParser</span>                              <span class="c1">// \d+</span>
+</span><span class='line'>                <span class="k">let</span><span class="o">!</span> <span class="n">l</span> <span class="o">=</span> <span class="nc">Many</span> <span class="nc">DigitParser</span>                               <span class="c1">//   \d*</span>
+</span><span class='line'>                <span class="k">let</span><span class="o">!</span> <span class="n">p</span> <span class="o">=</span> <span class="nc">CharParser</span> <span class="sc">&#39;.&#39;</span>                                 <span class="c1">//   \.</span>
+</span><span class='line'>                <span class="k">let</span><span class="o">!</span> <span class="n">d</span> <span class="o">=</span> <span class="nc">Many1</span> <span class="nc">DigitParser</span>                              <span class="c1">//   \d+</span>
 </span><span class='line'>                <span class="k">return</span> <span class="n">l</span> <span class="o">@</span> <span class="n">p</span><span class="o">::</span><span class="n">d</span>
-</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>                                                           <span class="c1">// )</span>
 </span><span class='line'>        <span class="o">)</span>
-</span><span class='line'>        <span class="k">let</span><span class="o">!</span> <span class="n">e</span> <span class="o">=</span> <span class="o">(</span><span class="n">parse</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">let</span><span class="o">!</span> <span class="n">e</span> <span class="o">=</span> <span class="nc">CharParser</span> <span class="sc">&#39;e&#39;</span> <span class="o">&lt;|&gt;</span> <span class="nc">CharParser</span> <span class="sc">&#39;E&#39;</span>                  <span class="c1">// ([eE]</span>
+</span><span class='line'>        <span class="k">let</span><span class="o">!</span> <span class="n">e</span> <span class="o">=</span> <span class="o">(</span><span class="n">parse</span> <span class="o">{</span>                                               <span class="c1">// (</span>
+</span><span class='line'>            <span class="k">let</span><span class="o">!</span> <span class="n">e</span> <span class="o">=</span> <span class="nc">CharParser</span> <span class="sc">&#39;e&#39;</span> <span class="o">&lt;|&gt;</span> <span class="nc">CharParser</span> <span class="sc">&#39;E&#39;</span>                  <span class="c1">//   [eE]</span>
 </span><span class='line'>            <span class="k">let</span><span class="o">!</span> <span class="n">s</span> <span class="o">=</span> <span class="o">(</span><span class="nc">CharParser</span> <span class="sc">&#39;+&#39;</span> <span class="o">&lt;|&gt;</span> <span class="nc">CharParser</span> <span class="sc">&#39;-&#39;</span><span class="o">)</span> <span class="o">&lt;|&gt;</span> <span class="nc">Return</span> <span class="sc">&#39;+&#39;</span> <span class="c1">//   [+-]?</span>
 </span><span class='line'>            <span class="k">let</span><span class="o">!</span> <span class="n">x</span> <span class="o">=</span> <span class="nc">Many1</span> <span class="o">(</span><span class="nc">DigitParser</span><span class="o">)</span>                                <span class="c1">//   \d+</span>
 </span><span class='line'>            <span class="k">return</span> <span class="n">e</span><span class="o">::</span><span class="n">s</span><span class="o">::</span><span class="n">x</span>                                              <span class="c1">// )?</span>
@@ -293,9 +295,11 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 </span></code></pre></td></tr></table></div></figure>
 
 
+<p>Imagine if we had to write the previous parser with nested <code>&gt;&gt;=</code> operators&#8230;</p>
+
 <h3>Conclusion</h3>
 
-<p>I think we can summarize the post in the follow points:</p>
+<p>I think we can summarize the post in the following points:</p>
 
 <ul>
 <li>The word <em>monad</em> is cool but gives no clue of what they actually are. Other languages have chosen more descriptive names such as <em>workflows</em>.</li>
@@ -339,7 +343,7 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>This means that a <code>Parser&lt;'a&gt;</code> will receive a <code>list&lt;char&gt;</code> and will return a <code>ParserResult&lt;'a&gt;</code> which can be either a <code>Failure</code> if nothing could be parsed or a <code>Success</code> and return both the parsed element and the rest of the list.</p>
+<p>This means that a <code>Parser</code> will receive a <code>list&lt;char&gt;</code> and will return a <code>ParserResult&lt;'a&gt;</code> which can be either a <code>Failure</code> if nothing could be parsed or a <code>Success</code> otherwise and return both the parsed element and the rest of the list.</p>
 
 <!--more-->
 
@@ -352,7 +356,9 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="k">let</span> <span class="nc">CharParser</span> <span class="o">(</span><span class="n">c</span><span class="o">:</span> <span class="kt">char</span><span class="o">)</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="o">=</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="c1">/// If the stream starts with c, returns Success, otherwise returns Failure</span>
+</span><span class='line'><span class="k">let</span> <span class="nc">CharParser</span> <span class="o">(</span><span class="n">c</span><span class="o">:</span> <span class="kt">char</span><span class="o">)</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="o">=</span>
 </span><span class='line'>    <span class="k">let</span> <span class="n">p</span> <span class="n">stream</span> <span class="o">=</span>
 </span><span class='line'>        <span class="k">match</span> <span class="n">stream</span> <span class="k">with</span>
 </span><span class='line'>        <span class="o">|</span> <span class="n">x</span><span class="o">::</span><span class="n">xs</span> <span class="k">when</span> <span class="n">x</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-&gt;</span> <span class="nc">Success</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">xs</span><span class="o">)</span>
@@ -398,7 +404,9 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="k">let</span> <span class="nc">Either</span> <span class="o">(</span><span class="n">p1</span><span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;)</span> <span class="o">(</span><span class="n">p2</span><span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;)</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;</span> <span class="o">=</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="c1">/// If p1 fails uses p2, otherwise returns p1&#39;s result</span>
+</span><span class='line'><span class="k">let</span> <span class="nc">Either</span> <span class="o">(</span><span class="n">p1</span><span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;)</span> <span class="o">(</span><span class="n">p2</span><span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;)</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;</span> <span class="o">=</span>
 </span><span class='line'>    <span class="k">let</span> <span class="n">p</span> <span class="n">stream</span> <span class="o">=</span>
 </span><span class='line'>        <span class="k">match</span> <span class="n">p1</span> <span class="n">stream</span> <span class="k">with</span>
 </span><span class='line'>        <span class="o">|</span> <span class="nc">Failure</span> <span class="o">-&gt;</span> <span class="n">p2</span> <span class="n">stream</span>
@@ -415,7 +423,9 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="k">let</span> <span class="nc">DigitParser</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="o">=</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="c1">/// Parses any digit character</span>
+</span><span class='line'><span class="k">let</span> <span class="nc">DigitParser</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="o">=</span>
 </span><span class='line'>    <span class="o">[</span><span class="sc">&#39;0&#39;</span><span class="o">..</span><span class="sc">&#39;9&#39;</span><span class="o">]</span>
 </span><span class='line'>    <span class="o">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">map</span> <span class="nc">CharParser</span>
 </span><span class='line'>    <span class="o">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">reduce</span> <span class="nc">Either</span>
@@ -430,7 +440,9 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="k">let</span> <span class="nc">Apply</span> <span class="o">(</span><span class="n">p</span><span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;)</span> <span class="o">(</span><span class="n">f</span><span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">b</span><span class="o">&gt;</span> <span class="o">=</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="c1">/// Applies the function f to the result of p if it succeeds</span>
+</span><span class='line'><span class="k">let</span> <span class="nc">Apply</span> <span class="o">(</span><span class="n">p</span><span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;)</span> <span class="o">(</span><span class="n">f</span><span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">b</span><span class="o">&gt;</span> <span class="o">=</span>
 </span><span class='line'>    <span class="k">let</span> <span class="n">q</span> <span class="n">stream</span> <span class="o">=</span>
 </span><span class='line'>        <span class="k">match</span> <span class="n">p</span> <span class="n">stream</span> <span class="k">with</span>
 </span><span class='line'>        <span class="o">|</span> <span class="nc">Success</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">rest</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="nc">Success</span><span class="o">(</span><span class="n">f</span> <span class="n">x</span><span class="o">,</span> <span class="n">rest</span><span class="o">)</span>
@@ -454,7 +466,9 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="k">let</span> <span class="k">rec</span> <span class="nc">Many</span> <span class="o">(</span><span class="n">p</span><span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;)</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="nc">List</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;&gt;</span> <span class="o">=</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="c1">/// Applies p as many times as possible</span>
+</span><span class='line'><span class="k">let</span> <span class="k">rec</span> <span class="nc">Many</span> <span class="o">(</span><span class="n">p</span><span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;)</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="nc">List</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;&gt;</span> <span class="o">=</span>
 </span><span class='line'>    <span class="k">let</span> <span class="n">q</span> <span class="n">stream</span> <span class="o">=</span>
 </span><span class='line'>        <span class="k">match</span> <span class="n">p</span> <span class="n">stream</span> <span class="k">with</span>
 </span><span class='line'>        <span class="o">|</span> <span class="nc">Failure</span> <span class="o">-&gt;</span> <span class="nc">Success</span><span class="o">(</span><span class="bp">[]</span><span class="o">,</span> <span class="n">stream</span><span class="o">)</span>
@@ -469,7 +483,9 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="k">let</span> <span class="nc">IntegerParser</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">=</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="c1">/// Parses (positive) integer numbers</span>
+</span><span class='line'><span class="k">let</span> <span class="nc">IntegerParser</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">=</span>
 </span><span class='line'>    <span class="nc">Apply</span> <span class="o">(</span><span class="nc">Many</span> <span class="nc">DigitParserInt</span><span class="o">)</span> <span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">reduce</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">y</span><span class="o">))</span>
 </span></code></pre></td></tr></table></div></figure>
 

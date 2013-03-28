@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Functional programming | Santi Albo]]></title>
   <link href="http://santialbo.com/blog/categories/functional-programming/atom.xml" rel="self"/>
   <link href="http://santialbo.com/"/>
-  <updated>2013-03-27T16:30:03-04:00</updated>
+  <updated>2013-03-28T00:41:01-04:00</updated>
   <id>http://santialbo.com/</id>
   <author>
     <name><![CDATA[Santi Albo]]></name>
@@ -27,7 +27,7 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 
 <p><em>Ok... but what are they?</em></p>
 
-<p>Basically monads are just a typeclass and two fundamental operations associated. Think of a generic interface with two abstract methods. These operations have the following syntax:</p>
+<p>Basically, monads are just a typeclass and two fundamental operations associated. Think of a generic interface with two abstract methods. These operations have the following syntax:</p>
 
 <p><code>fsharp
 Return: 'a -&gt; M&lt;'a&gt;
@@ -37,7 +37,7 @@ Bind: M&lt;'a&gt; -&gt; ('a -&gt; M&lt;'b&gt;) -&gt; M&lt;'b&gt;
 <!--more-->
 
 
-<p>If you have a type <code>M&lt;'a&gt;</code> and two methods with those signatures you've got a monad. <em>(Actually there are <a href="http://en.wikipedia.org/wiki/Monad_%28functional_programming%29#Monad_laws">a couple rules</a> these two methods must obey, but we will skip them since they might complicate things.)</em></p>
+<p>If you have a type <code>M&lt;'a&gt;</code> and two methods with those signatures, then you've got a monad. (Actually there are <a href="http://en.wikipedia.org/wiki/Monad_%28functional_programming%29#Monad_laws">a couple rules</a> these two methods must obey, but we will skip them since they might complicate things.)</p>
 
 <p>The classical example is the <em>Maybe</em>/<em>Option</em> monad. In F#, it can be defined as follows:</p>
 
@@ -63,11 +63,11 @@ type Maybe&lt;'a> =</p>
 
 <p>```</p>
 
-<p>which may suffice within the pages of a textbookf, but for myself, still didn't make things any clearer. What I am going to do however, is explain how the usage of monads makes a lot of sense when dealing parser combinators. <em>(If you want to keep reading about the Maybe monad example you can go to <a href="http://en.wikipedia.org/wiki/Monad_%28functional_programming%29#Motivating_examples">the wikipedia entry about monads</a>)</em>.</p>
+<p>which may suffice within the pages of a textbook, but it didn't make things any clearer to me. Instead, I am going to explain how the usage of monads makes a lot of sense when dealing parser combinators. (If you want to keep reading about the Maybe monad example you can go to <a href="http://en.wikipedia.org/wiki/Monad_%28functional_programming%29#Motivating_examples">the wikipedia entry about monads</a>).</p>
 
 <h3>Monads and parser combinators</h3>
 
-<p>If you don't know what parser combinators are, you can read <a href="/blog/2013/03/24/introduction-to-parser-combinators/">my previous blog post</a> to get a quick grasp.</p>
+<p>If you don't know what parser combinators are, you can read <a href="/blog/2013/03/24/introduction-to-parser-combinators/">my previous blog post</a> to get a quick overview.</p>
 
 <p>So we have the following type definition:</p>
 
@@ -79,7 +79,8 @@ type ParserResult&lt;'a> =</p>
 </code></pre>
 
 <p>type Parser&lt;'a> = list<char> -> ParserResult&lt;'a>
-```</p>
+<code>``
+That means that a</code>Parser<code>is just a function that takes a list of characters and returns a</code>ParserResult&lt;'a><code>, which can be either a</code>Failure<code>if nothing could be parsed or a</code>Success` otherwise, returning both the parsed element and the rest of the list.</p>
 
 <p>Now that we have the typeclass <code>Parser</code>, we only need to define the associated <code>Return</code> and <code>Bind</code> operations:</p>
 
@@ -101,7 +102,7 @@ in q
 
 <p>```</p>
 
-<p>TA-DAA! There's a monad. It is pretty standard notation though to use the operator <code>&gt;&gt;=</code> for the <code>Bind</code> operation. We can define it too:</p>
+<p>TA-DAA! There's a monad. It is standard notation, though, to use the operator <code>&gt;&gt;=</code> for the <code>Bind</code> operation. We can define it too:</p>
 
 <p><code>fsharp
 let (&gt;&gt;=) = Bind
@@ -109,28 +110,28 @@ let (&gt;&gt;=) = Bind
 
 <p><em>Cool, but how is this useful?</em></p>
 
-<p>This functions we just defined allows us to define the following parser combinators in a very concise way:</p>
+<p>Those functions we just defined allow us to define the following parser combinators in a very concise way:</p>
 
 <p>```fsharp
-/// If parser p succeeds returns x as a result.
+/// If parser p succeeds, returns x as a result.
 let (>>%) p x : Parser&lt;'b> =</p>
 
 <pre><code>p &gt;&gt;= (fun _ -&gt; Return x)
 </code></pre>
 
-<p>/// Applies parsers p1 and p2 returning the result of p2.
+<p>/// Applies parsers p1 and p2, returning the result of p2.
 let (>>.) p1 p2 : Parser&lt;'b> =</p>
 
 <pre><code>p1 &gt;&gt;= (fun _ -&gt; p2)
 </code></pre>
 
-<p>/// Applies parsers p1 and p2 returning the result of p1.
+<p>/// Applies parsers p1 and p2, returning the result of p1.
 let (.>>) p1 p2 : Parser&lt;'a> =</p>
 
 <pre><code>p1 &gt;&gt;= (fun x -&gt; p2 &gt;&gt;% x)
 </code></pre>
 
-<p>/// Applies parsers p1 and p2 returning both results.
+<p>/// Applies parsers p1 and p2, returning both results.
 let (.>>.) p1 p2: Parser&lt;'a*'b> =</p>
 
 <pre><code>p1 &gt;&gt;= (fun x -&gt; p2 &gt;&gt;= (fun y -&gt; Return (x, y)))
@@ -138,11 +139,11 @@ let (.>>.) p1 p2: Parser&lt;'a*'b> =</p>
 
 <p>```</p>
 
-<p>Notice however how the <em>Bind</em> operator <code>&gt;&gt;=</code> is used twice in the definition of the <code>.&gt;&gt;.</code> operator. Unfortunately this is a little bit hard to read, specially when dealing with more complex parsers. That is why Haskell introduced the <em>do-notation</em> (<em>perform-notation</em> in OCaml or <em>computation expressions</em> in F#), which is a syntactic sugar that tries to mimick the imperative laguages style. Basically, it allows you to write a series of simple <em>statements</em> instead of a nested series of <code>&gt;&gt;=</code> operations.</p>
+<p>Notice that the <em>Bind</em> operator <code>&gt;&gt;=</code> is used twice in the definition of the <code>.&gt;&gt;.</code> operator. Unfortunately, this gets harder to read as the complexity of parsers increases. This is why Haskell introduced the <em>do-notation</em> (<em>perform-notation</em> in OCaml or <em>computation expressions</em> in F#), which is a syntactic sugar that tries to mimick the imperative-style laguages. Basically, it allows you to write a series of simple <em>statements</em> instead of a nested series of <code>&gt;&gt;=</code> operations.</p>
 
 <h3>Workflows</h3>
 
-<p>In order to use the F#'s equivalent to the <em>do-notation</em>, we need to create a <em>workflow builder</em>. Workflow builders are just an interface that we have to implement. Two methods are required, the rest are optional. These two methods are, as one could expect, <code>Return</code> and <code>Bind</code>. This is how we can define the <code>parse</code> workflow:</p>
+<p>In order to use the F#'s equivalent to the <em>do-notation</em>, we need to create a <em>workflow builder</em>. Workflow builders are just an interface that we have to implement. Two methods are required; the rest are optional. These two methods are <code>Return</code> and <code>Bind</code> as you might have guessed. This is how we can define the <code>parse</code> workflow:</p>
 
 <p>```fsharp
 // Note that we previously defined Bind and Return.
@@ -155,7 +156,7 @@ member x.Return(y) = Return y
 <p>let parse = new ParserBuilder()
 ```</p>
 
-<p>and this is how we use it to define the <code>Many</code> parser combinator in a more readable way.</p>
+<p>and this is how we use it to define the <code>Many</code> parser combinator in a more readable way than thre previous blog post.</p>
 
 <p>```fsharp
 // This is the Either combinator defined in the previous blog post.
@@ -172,7 +173,7 @@ let (&lt;|>) = Either</p>
 
 <p>```</p>
 
-<p>or the following <code>Many1</code> combinator, which is similar to the <code>Many</code> combinator but requires at least one success:</p>
+<p>or the following <code>Many1</code> combinator, which is similar to the <code>Many</code> combinator but requires at least one success (Think of <code>*</code> vs <code>+</code> in regular expressions):</p>
 
 <p>```fsharp
 let Many1 p : Parser&lt;list&lt;'a>> =</p>
@@ -186,7 +187,7 @@ let Many1 p : Parser&lt;list&lt;'a>> =</p>
 
 <p>```</p>
 
-<p>or even more complex parsers such a this float number parser:</p>
+<p>or even more complex parsers such a this floating point number parser:</p>
 
 <p>```fsharp
 /// Parses float numbers which match /[+-]?(\d+(.\d<em>)?|\d</em>.\d+)([eE][+-]?\d+)?/
@@ -195,23 +196,23 @@ let FloatParser: Parser<float> =</p>
 <pre><code>parse {
     let! s = (CharParser '+' &lt;|&gt; CharParser '-') &lt;|&gt; Return '+'     // [+-]?
     let! l = (parse {                                               // (
-        let! l = Many1 DigitParser                                  //  \d+
-        let! pd = (parse {                                          //  (
-            let! p = CharParser '.'                                 //   \.
-            let! d = Many DigitParser                               //   \d*
+        let! l = Many1 DigitParser                                  //   \d+
+        let! pd = (parse {                                          //   (
+            let! p = CharParser '.'                                 //     \.
+            let! d = Many DigitParser                               //     \d*
             return p::d
-            } &lt;|&gt; Return [])                                        //  )?
+            } &lt;|&gt; Return [])                                        //   )?
         return l @ pd
-        } &lt;|&gt;                                                       //  |
+        } &lt;|&gt;                                                       //   |
         parse {
-            let! l = Many DigitParser                               // \d*
-            let! p = CharParser '.'                                 // \.
-            let! d = Many1 DigitParser                              // \d+
+            let! l = Many DigitParser                               //   \d*
+            let! p = CharParser '.'                                 //   \.
+            let! d = Many1 DigitParser                              //   \d+
             return l @ p::d
-        }
+        }                                                           // )
     )
-    let! e = (parse {
-        let! e = CharParser 'e' &lt;|&gt; CharParser 'E'                  // ([eE]
+    let! e = (parse {                                               // (
+        let! e = CharParser 'e' &lt;|&gt; CharParser 'E'                  //   [eE]
         let! s = (CharParser '+' &lt;|&gt; CharParser '-') &lt;|&gt; Return '+' //   [+-]?
         let! x = Many1 (DigitParser)                                //   \d+
         return e::s::x                                              // )?
@@ -230,9 +231,11 @@ let FloatParser: Parser<float> =</p>
 Success (-1.23e+45,[])
 ```</p></blockquote>
 
+<p>Imagine if we had to write the previous parser with nested <code>&gt;&gt;=</code> operators...</p>
+
 <h3>Conclusion</h3>
 
-<p>I think we can summarize the post in the follow points:</p>
+<p>I think we can summarize the post in the following points:</p>
 
 <ul>
 <li>The word <em>monad</em> is cool but gives no clue of what they actually are. Other languages have chosen more descriptive names such as <em>workflows</em>.</li>
@@ -273,7 +276,7 @@ type ParserResult&lt;'a> =</p>
 <p>type Parser&lt;'a> = list<char> -> ParserResult&lt;'a>
 ```</p>
 
-<p>This means that a <code>Parser&lt;'a&gt;</code> will receive a <code>list&lt;char&gt;</code> and will return a <code>ParserResult&lt;'a&gt;</code> which can be either a <code>Failure</code> if nothing could be parsed or a <code>Success</code> and return both the parsed element and the rest of the list.</p>
+<p>This means that a <code>Parser</code> will receive a <code>list&lt;char&gt;</code> and will return a <code>ParserResult&lt;'a&gt;</code> which can be either a <code>Failure</code> if nothing could be parsed or a <code>Success</code> otherwise and return both the parsed element and the rest of the list.</p>
 
 <!--more-->
 
@@ -281,6 +284,7 @@ type ParserResult&lt;'a> =</p>
 <p>Having this definition, we can now build our first parser:</p>
 
 <p>```fsharp
+/// If the stream starts with c, returns Success, otherwise returns Failure
 let CharParser (c: char) : Parser<char> =</p>
 
 <pre><code>let p stream =
@@ -320,12 +324,13 @@ val it : ParserResult<char> = Failure
 <p>We could, for example, define the following <code>Either</code> parser combinator:</p>
 
 <p>```fsharp
+/// If p1 fails uses p2, otherwise returns p1's result
 let Either (p1: Parser&lt;'a>) (p2: Parser&lt;'a>) : Parser&lt;'a> =</p>
 
 <pre><code>let p stream =
     match p1 stream with
     | Failure -&gt; p2 stream
-    | res -&gt; res 
+    | res -&gt; res
 in p
 </code></pre>
 
@@ -336,6 +341,7 @@ in p
 <p>Imagine now, we would like to build a digit parser. Now that we have defined our <code>Either</code> operator we could define the parser as:</p>
 
 <p>```fsharp
+/// Parses any digit character
 let DigitParser : Parser<char> =</p>
 
 <pre><code>['0'..'9']
@@ -348,6 +354,7 @@ let DigitParser : Parser<char> =</p>
 <p>What if we wanted that parser to return an <code>int</code> instead? We could simply define our second parser combinator:</p>
 
 <p>```fsharp
+/// Applies the function f to the result of p if it succeeds
 let Apply (p: Parser&lt;'a>) (f: 'a -> 'b) : Parser&lt;'b> =</p>
 
 <pre><code>let q stream =
@@ -368,6 +375,7 @@ let DigitParserInt = Apply DigitParser (fun c -&gt; (int c) - (int '0'))
 <p>But parsing only a single character is not very useful so we could build the following combinator</p>
 
 <p>```fsharp
+/// Applies p as many times as possible
 let rec Many (p: Parser&lt;'a>) : Parser&lt;List&lt;'a>> =</p>
 
 <pre><code>let q stream =
@@ -384,6 +392,7 @@ in q
 <p>This new combinator allows us to build the following integer parser:</p>
 
 <p>```fsharp
+/// Parses (positive) integer numbers
 let IntegerParser : Parser<int> =</p>
 
 <pre><code>Apply (Many DigitParserInt) (List.reduce (fun x y = x * 10 + y))

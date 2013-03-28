@@ -100,7 +100,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>This means that a <code>Parser&lt;'a&gt;</code> will receive a <code>list&lt;char&gt;</code> and will return a <code>ParserResult&lt;'a&gt;</code> which can be either a <code>Failure</code> if nothing could be parsed or a <code>Success</code> and return both the parsed element and the rest of the list.</p>
+<p>This means that a <code>Parser</code> will receive a <code>list&lt;char&gt;</code> and will return a <code>ParserResult&lt;'a&gt;</code> which can be either a <code>Failure</code> if nothing could be parsed or a <code>Success</code> otherwise and return both the parsed element and the rest of the list.</p>
 
 <!--more-->
 
@@ -113,7 +113,9 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="k">let</span> <span class="nc">CharParser</span> <span class="o">(</span><span class="n">c</span><span class="o">:</span> <span class="kt">char</span><span class="o">)</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="o">=</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="c1">/// If the stream starts with c, returns Success, otherwise returns Failure</span>
+</span><span class='line'><span class="k">let</span> <span class="nc">CharParser</span> <span class="o">(</span><span class="n">c</span><span class="o">:</span> <span class="kt">char</span><span class="o">)</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="o">=</span>
 </span><span class='line'>    <span class="k">let</span> <span class="n">p</span> <span class="n">stream</span> <span class="o">=</span>
 </span><span class='line'>        <span class="k">match</span> <span class="n">stream</span> <span class="k">with</span>
 </span><span class='line'>        <span class="o">|</span> <span class="n">x</span><span class="o">::</span><span class="n">xs</span> <span class="k">when</span> <span class="n">x</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-&gt;</span> <span class="nc">Success</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">xs</span><span class="o">)</span>
@@ -159,7 +161,9 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="k">let</span> <span class="nc">Either</span> <span class="o">(</span><span class="n">p1</span><span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;)</span> <span class="o">(</span><span class="n">p2</span><span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;)</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;</span> <span class="o">=</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="c1">/// If p1 fails uses p2, otherwise returns p1&#39;s result</span>
+</span><span class='line'><span class="k">let</span> <span class="nc">Either</span> <span class="o">(</span><span class="n">p1</span><span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;)</span> <span class="o">(</span><span class="n">p2</span><span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;)</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;</span> <span class="o">=</span>
 </span><span class='line'>    <span class="k">let</span> <span class="n">p</span> <span class="n">stream</span> <span class="o">=</span>
 </span><span class='line'>        <span class="k">match</span> <span class="n">p1</span> <span class="n">stream</span> <span class="k">with</span>
 </span><span class='line'>        <span class="o">|</span> <span class="nc">Failure</span> <span class="o">-&gt;</span> <span class="n">p2</span> <span class="n">stream</span>
@@ -176,7 +180,9 @@
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="k">let</span> <span class="nc">DigitParser</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="o">=</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="c1">/// Parses any digit character</span>
+</span><span class='line'><span class="k">let</span> <span class="nc">DigitParser</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="o">=</span>
 </span><span class='line'>    <span class="o">[</span><span class="sc">&#39;0&#39;</span><span class="o">..</span><span class="sc">&#39;9&#39;</span><span class="o">]</span>
 </span><span class='line'>    <span class="o">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">map</span> <span class="nc">CharParser</span>
 </span><span class='line'>    <span class="o">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">reduce</span> <span class="nc">Either</span>
@@ -191,7 +197,9 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="k">let</span> <span class="nc">Apply</span> <span class="o">(</span><span class="n">p</span><span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;)</span> <span class="o">(</span><span class="n">f</span><span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">b</span><span class="o">&gt;</span> <span class="o">=</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="c1">/// Applies the function f to the result of p if it succeeds</span>
+</span><span class='line'><span class="k">let</span> <span class="nc">Apply</span> <span class="o">(</span><span class="n">p</span><span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;)</span> <span class="o">(</span><span class="n">f</span><span class="o">:</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">b</span><span class="o">)</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">b</span><span class="o">&gt;</span> <span class="o">=</span>
 </span><span class='line'>    <span class="k">let</span> <span class="n">q</span> <span class="n">stream</span> <span class="o">=</span>
 </span><span class='line'>        <span class="k">match</span> <span class="n">p</span> <span class="n">stream</span> <span class="k">with</span>
 </span><span class='line'>        <span class="o">|</span> <span class="nc">Success</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">rest</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="nc">Success</span><span class="o">(</span><span class="n">f</span> <span class="n">x</span><span class="o">,</span> <span class="n">rest</span><span class="o">)</span>
@@ -215,7 +223,9 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="k">let</span> <span class="k">rec</span> <span class="nc">Many</span> <span class="o">(</span><span class="n">p</span><span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;)</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="nc">List</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;&gt;</span> <span class="o">=</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="c1">/// Applies p as many times as possible</span>
+</span><span class='line'><span class="k">let</span> <span class="k">rec</span> <span class="nc">Many</span> <span class="o">(</span><span class="n">p</span><span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;)</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="nc">List</span><span class="o">&lt;</span><span class="k">&#39;</span><span class="n">a</span><span class="o">&gt;&gt;</span> <span class="o">=</span>
 </span><span class='line'>    <span class="k">let</span> <span class="n">q</span> <span class="n">stream</span> <span class="o">=</span>
 </span><span class='line'>        <span class="k">match</span> <span class="n">p</span> <span class="n">stream</span> <span class="k">with</span>
 </span><span class='line'>        <span class="o">|</span> <span class="nc">Failure</span> <span class="o">-&gt;</span> <span class="nc">Success</span><span class="o">(</span><span class="bp">[]</span><span class="o">,</span> <span class="n">stream</span><span class="o">)</span>
@@ -230,7 +240,9 @@
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="k">let</span> <span class="nc">IntegerParser</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">=</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="c1">/// Parses (positive) integer numbers</span>
+</span><span class='line'><span class="k">let</span> <span class="nc">IntegerParser</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">=</span>
 </span><span class='line'>    <span class="nc">Apply</span> <span class="o">(</span><span class="nc">Many</span> <span class="nc">DigitParserInt</span><span class="o">)</span> <span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">reduce</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">y</span><span class="o">))</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -271,9 +283,10 @@
 
 </div>
 	
-		<div class="comments"><a href="/blog/2013/03/24/introduction-to-parser-combinators/#disqus_thread">Comments</a></div>
+		<div class="comments"><a href="#disqus_thread">Comments</a></div>
 	
-</div></article>
+</div>
+</article>
 
 	<div class="share">
 	<div class="addthis_toolbox addthis_default_style ">
