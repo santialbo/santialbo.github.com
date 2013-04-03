@@ -4,7 +4,7 @@
   <title><![CDATA[Santi Albo]]></title>
   <link href="http://santialbo.com/atom.xml" rel="self"/>
   <link href="http://santialbo.com/"/>
-  <updated>2013-03-28T12:07:55-04:00</updated>
+  <updated>2013-04-03T10:49:25-04:00</updated>
   <id>http://santialbo.com/</id>
   <author>
     <name><![CDATA[Santi Albo]]></name>
@@ -486,7 +486,7 @@ However, to me the word is rather obscure, and might sound a little daunting to 
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="c1">/// Parses (positive) integer numbers</span>
 </span><span class='line'><span class="k">let</span> <span class="nc">IntegerParser</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">=</span>
-</span><span class='line'>    <span class="nc">Apply</span> <span class="o">(</span><span class="nc">Many</span> <span class="nc">DigitParserInt</span><span class="o">)</span> <span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">reduce</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">y</span><span class="o">))</span>
+</span><span class='line'>    <span class="nc">Apply</span> <span class="o">(</span><span class="nc">Many</span> <span class="nc">DigitParserInt</span><span class="o">)</span> <span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">reduce</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">y</span><span class="o">))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 

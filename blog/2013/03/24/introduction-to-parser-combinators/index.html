@@ -243,7 +243,7 @@
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='fsharp'><span class='line'><span class="c1">/// Parses (positive) integer numbers</span>
 </span><span class='line'><span class="k">let</span> <span class="nc">IntegerParser</span> <span class="o">:</span> <span class="nc">Parser</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">=</span>
-</span><span class='line'>    <span class="nc">Apply</span> <span class="o">(</span><span class="nc">Many</span> <span class="nc">DigitParserInt</span><span class="o">)</span> <span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">reduce</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">y</span><span class="o">))</span>
+</span><span class='line'>    <span class="nc">Apply</span> <span class="o">(</span><span class="nc">Many</span> <span class="nc">DigitParserInt</span><span class="o">)</span> <span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">reduce</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">y</span><span class="o">))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
