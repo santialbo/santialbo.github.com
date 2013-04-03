@@ -4,7 +4,7 @@
   <title><![CDATA[Santi Albo]]></title>
   <link href="http://santialbo.com/atom.xml" rel="self"/>
   <link href="http://santialbo.com/"/>
-  <updated>2013-04-03T10:49:25-04:00</updated>
+  <updated>2013-04-03T13:34:54-04:00</updated>
   <id>http://santialbo.com/</id>
   <author>
     <name><![CDATA[Santi Albo]]></name>
@@ -18,6 +18,17 @@
     <link href="http://santialbo.com/blog/2013/03/27/monads-in-f-sharp/"/>
     <updated>2013-03-27T16:04:00-04:00</updated>
     <id>http://santialbo.com/blog/2013/03/27/monads-in-f-sharp</id>
+    
+    <category><![CDATA[Functional programming]]></category>
+    
+    <category><![CDATA[Monads]]></category>
+    
+    <category><![CDATA[Parser combinators]]></category>
+    
+    
+    
+    <summary><![CDATA[When I first tried to learn what monads were, I probably made the mistake of going to wikipedia, which only made things worse. It was not until I began to play with parser combinators that I started to grasp the concept. What are monads? You probably heard the word monad &hellip;]]></summary>
+    
     <content type="html"><![CDATA[<p>When I first tried to learn what monads were, I probably made the mistake of going to wikipedia, which only made things worse. It was not until I began to play with <a href="http://santialbo.com/blog/2013/03/24/introduction-to-parser-combinators/">parser combinators</a> that I started to grasp the concept.</p>
 
 <h3>What are monads?</h3>
@@ -320,6 +331,15 @@ However, to me the word is rather obscure, and might sound a little daunting to 
     <link href="http://santialbo.com/blog/2013/03/24/introduction-to-parser-combinators/"/>
     <updated>2013-03-24T23:45:00-04:00</updated>
     <id>http://santialbo.com/blog/2013/03/24/introduction-to-parser-combinators</id>
+    
+    <category><![CDATA[Functional programming]]></category>
+    
+    <category><![CDATA[Parser combinators]]></category>
+    
+    
+    
+    <summary><![CDATA[So I have been playing with parser combinators for quite a while now and they felt so interesting that I wanted to write about them. What is a parser? Basically a parser is a function which accepts some sort of character input such a string or a character stream and &hellip;]]></summary>
+    
     <content type="html"><![CDATA[<p>So I have been playing with parser combinators for quite a while now and they felt so interesting that I wanted to write about them.</p>
 
 <h3>What is a parser?</h3>
