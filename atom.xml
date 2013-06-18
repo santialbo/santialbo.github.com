@@ -4,7 +4,7 @@
   <title><![CDATA[Santi Albo]]></title>
   <link href="http://santialbo.com/atom.xml" rel="self"/>
   <link href="http://santialbo.com/"/>
-  <updated>2013-04-23T12:30:24-04:00</updated>
+  <updated>2013-06-18T13:49:25+02:00</updated>
   <id>http://santialbo.com/</id>
   <author>
     <name><![CDATA[Santi Albo]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Monads in F#]]></title>
     <link href="http://santialbo.com/blog/2013/03/27/monads-in-f-sharp/"/>
-    <updated>2013-03-27T16:04:00-04:00</updated>
+    <updated>2013-03-27T16:04:00+01:00</updated>
     <id>http://santialbo.com/blog/2013/03/27/monads-in-f-sharp</id>
     
     <category><![CDATA[F#]]></category>
@@ -331,7 +331,7 @@ However, to me the word is rather obscure, and might sound a little daunting to 
   <entry>
     <title type="html"><![CDATA[Introduction to parser combinators]]></title>
     <link href="http://santialbo.com/blog/2013/03/24/introduction-to-parser-combinators/"/>
-    <updated>2013-03-24T23:45:00-04:00</updated>
+    <updated>2013-03-24T23:45:00+01:00</updated>
     <id>http://santialbo.com/blog/2013/03/24/introduction-to-parser-combinators</id>
     
     <category><![CDATA[F#]]></category>
